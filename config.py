@@ -1,6 +1,11 @@
 from telethon import TelegramClient
 from dotenv import load_dotenv
 import os
+import pandas as pd
+# pd.options.compute = 'pyarrow'
+
+
+
 load_dotenv()
 # These example values won't work. You must get your own api_id and
 # api_hash from https://my.telegram.org, under API Development.
@@ -18,18 +23,37 @@ async def main():
 
     # "me" is a user object. You can pretty-print
     # any Telegram object with the "stringify" method:
-    print(me.stringify())
+    # print(me.stringify())
 
-    # When you print something, you see a representation of it.
-    # You can access all attributes of Telegram objects with
-    # the dot operator. For example, to get the username:
-    username = me.username
-    print(username)
-    print(me.phone)
-
-    # You can print all the dialogs/conversations that you are part of:
+    # # When you print something, you see a representation of it.
+    # # You can access all attributes of Telegram objects with
+    # # the dot operator. For example, to get the username:
+    # username = me.username
+    # print(username)
+    # print(me.phone)
+    dic ={}
+    # # You can print all the dialogs/conversations that you are part of:
     async for dialog in client.iter_dialogs():
-        print(dialog.name, 'has ID', dialog.id)
+        # print(dialog.name, 'has ID', dialog.id)
+        try:
+            if dialog.name:
+                dic[dialog.name] = dialog.id
+        except Exception as e:
+            print(e)
+        else:
+            # print(dic)
+            # Extract names and UIDs from the dictionary keys
+            names = [key.split()[0] for key in dic.keys()]
+            uids = list(dic.values())
+
+            # Create a DataFrame with the extracted data
+            df = pd.DataFrame({'name': names, 'uid': uids})
+            df.to_csv(path_or_buf='data/allid.csv')
+
+
+            # print(df)
+
+    
 
     # # You can send messages to yourself...
     # await client.send_message('me', 'Hello, myself!')
