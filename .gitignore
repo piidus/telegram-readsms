@@ -7,6 +7,7 @@ data/*
 *.so
 private/*
 private*
+session*
 # Distribution / packaging
 .Python
 build/
