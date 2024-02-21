@@ -8,3 +8,6 @@ commands :
 - create a .env file and store 
     enter your mobileno with country code 
     enter password
+
+# Webmail Python send mail
+From Python using Webmail it send mail 

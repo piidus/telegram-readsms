@@ -1,4 +1,4 @@
-from smtplib import SMTP, SMTP_SSL
+import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -12,33 +12,41 @@ mail_server =os.environ.get('mail_server')
 mail_receiver =os.environ.get('mail_receiver')
 
 
-s = SMTP(host=str(mail_server), port=int(465), timeout=60)
-s.starttls()
-s.login(str(mail_id), str(mail_pwd))
-msg = MIMEMultipart()
-msg['From']=str(mail_id)
-msg['To']=str(mail_receiver)
-msg['Subject']=str('Testing')
-msg.attach(MIMEText(str("First Test"), "plain"))
-s.send_message(msg)
-s.quit()
-del msg
+def send_email(subject, message, from_email, to_email, smtp_server, smtp_port, smtp_username, smtp_password):
+    # Create a message
+    msg = MIMEMultipart()
+    msg['From'] = from_email
+    msg['To'] = to_email
+    msg['Subject'] = subject
 
-# msg = MIMEMultipart()
+    # Add body to the message
+    msg.attach(MIMEText(message, 'plain'))
 
-# msg['From'] = mail_id
-# msg['To'] = mail_receiver
-# msg['Subject'] = 'Testing'
-# body = 'This is a test email from python.'
-# msg.attach(MIMEText(body, 'plain'))
-# conn = SMTP_SSL(host=mail_server, port=465)
-# try:
-#     # conn.starttls()
-#     conn.login(user=mail_id, password=mail_pwd)
-    
-#     send =conn.sendmail(from_addr=mail_id,to_addrs=mail_receiver,msg=msg.as_string())
-#     print(send)
-# except Exception as e:
-#     print('error', e)
-# finally:
-#     conn.quit()
+    try:
+        # Establish a connection to the SMTP server
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()  # Upgrade the connection to secure (TLS) mode
+        server.login(smtp_username, smtp_password)
+
+        # Send the email
+        server.sendmail(from_email, to_email, msg.as_string())
+        print("Email sent successfully!")
+
+    except Exception as e:
+        print("Error sending email:", e)
+
+    finally:
+        # Close the connection to the SMTP server
+        server.quit()
+
+# Example usage
+subject = 'Test Email'
+message = 'This is a test email sent using smtplib.'
+from_email = mail_id
+to_email = mail_receiver
+smtp_server = mail_server
+smtp_port = 587  # Port for TLS (587 for Gmail)
+smtp_username = mail_id
+smtp_password = mail_pwd
+
+send_email(subject, message, from_email, to_email, smtp_server, smtp_port, smtp_username, smtp_password)
