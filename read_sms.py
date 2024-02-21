@@ -25,8 +25,11 @@ async def handler(event):
     # print('chat', chat, '\n', 
         #   'sender', sender, '\n',
     # print(sender)
-    print('chat id', chat_id, '\n', 'sender_id', sender_id,'\n',
-          'text ::', text)
+    id = '-1001319214389'
+    if chat_id == id:
+        
+        print('chat id', chat_id, '\n', 'sender_id', sender_id,'\n',
+            'text ::', text)
 client.start()
 client.run_until_disconnected()
 
